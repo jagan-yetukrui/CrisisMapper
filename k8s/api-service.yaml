@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crisismapper-api-service
+  namespace: crisismapper
+  labels:
+    app: crisismapper-api
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 8000
+      protocol: TCP
+      name: https
+  selector:
+    app: crisismapper-api

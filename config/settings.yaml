@@ -1,0 +1,101 @@
+# CrisisMapper Configuration File
+
+# Model Configuration
+model:
+  name: "yolov8n" # Options: yolov8n, yolov8s, yolov8m, yolov8l, yolov8x
+  weights_path: "models/yolov8n.pt"
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  max_detections: 1000
+  device: "auto" # Options: auto, cpu, cuda, mps
+
+# Disaster Classes
+disaster_classes:
+  - name: "flood"
+    id: 0
+    color: [0, 0, 255] # Blue
+    description: "Flooded areas and water damage"
+  - name: "wildfire"
+    id: 1
+    color: [255, 0, 0] # Red
+    description: "Fire damage and burned areas"
+  - name: "earthquake"
+    id: 2
+    color: [255, 255, 0] # Yellow
+    description: "Structural damage from earthquakes"
+  - name: "landslide"
+    id: 3
+    color: [128, 0, 128] # Purple
+    description: "Landslide and debris areas"
+  - name: "hurricane"
+    id: 4
+    color: [0, 255, 255] # Cyan
+    description: "Hurricane and storm damage"
+
+# Data Processing
+data_processing:
+  input_formats: [".jpg", ".jpeg", ".png", ".tiff", ".tif"]
+  output_formats: [".geojson", ".shp", ".kml"]
+  tile_size: 1024
+  overlap: 0.1
+  max_image_size: 4096
+  batch_size: 8
+  num_workers: 4
+
+# Geospatial Settings
+geospatial:
+  default_crs: "EPSG:4326"
+  output_crs: "EPSG:3857" # Web Mercator for web mapping
+  buffer_distance: 0.001 # Buffer around detected areas in degrees
+  simplify_tolerance: 0.0001 # Simplify geometries for performance
+
+# Data Sources
+data_sources:
+  nasa_earthdata:
+    base_url: "https://e4ftl01.cr.usgs.gov"
+    username: null # Set via environment variable
+    password: null # Set via environment variable
+  sentinel2:
+    base_url: "https://scihub.copernicus.eu/dhus"
+    username: null # Set via environment variable
+    password: null # Set via environment variable
+  openstreetmap:
+    base_url: "https://api.openstreetmap.org"
+    user_agent: "CrisisMapper/1.0"
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: true
+  cors_origins: ["*"]
+  max_file_size: 100 # MB
+  rate_limit: 100 # requests per minute
+
+# Visualization
+visualization:
+  map_center: [0, 0] # [lat, lon]
+  default_zoom: 2
+  tile_layers:
+    - name: "OpenStreetMap"
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution: "© OpenStreetMap contributors"
+    - name: "Satellite"
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      attribution: "© Esri"
+
+# Performance Monitoring
+performance:
+  enable_profiling: true
+  log_level: "INFO"
+  save_predictions: true
+  benchmark_output: "results/benchmarks/"
+
+# Output Settings
+output:
+  base_dir: "results"
+  create_subdirs: true
+  include_metadata: true
+  export_formats: ["geojson", "shapefile", "kml"]
+  generate_reports: true
+  save_visualizations: true
